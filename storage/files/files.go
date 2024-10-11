@@ -18,11 +18,11 @@ type Storage struct {
 
 const defaultPerm = 0774
 
-func New(basePath string) Storage {
-	return Storage{basePath: basePath}
+func New(basePath string) *Storage {
+	return &Storage{basePath: basePath}
 }
 
-func (s Storage) Save(page *storage.Page) (err error) {
+func (s *Storage) Save(page *storage.Page) (err error) {
 	defer func() { err = e.WrapIfErr("can't save page", err) }()
 
 	fPath := filepath.Join(s.basePath, page.UserName)
@@ -52,7 +52,7 @@ func (s Storage) Save(page *storage.Page) (err error) {
 	return nil
 }
 
-func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
+func (s *Storage) PickRandom(userName string) (page *storage.Page, err error) {
 	path := filepath.Join(s.basePath, userName)
 
 	files, err := os.ReadDir(path)
@@ -72,7 +72,7 @@ func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 	return s.decodePage(filepath.Join(path, file.Name()))
 }
 
-func (s Storage) Remove(p *storage.Page) (err error) {
+func (s *Storage) Remove(p *storage.Page) (err error) {
 	fileName, err := fileName(p)
 	if err != nil {
 		return e.Wrap("can't remove file", err)
@@ -88,7 +88,7 @@ func (s Storage) Remove(p *storage.Page) (err error) {
 	return nil
 }
 
-func (s Storage) IsExists(p *storage.Page) (bool, error) {
+func (s *Storage) IsExists(p *storage.Page) (bool, error) {
 	fileName, err := fileName(p)
 	if err != nil {
 		return false, e.Wrap("can't check if file exist", err)
@@ -118,7 +118,7 @@ func isFolderExists(path string) (bool, error) {
 	return false, err
 }
 
-func (s Storage) decodePage(filePath string) (page *storage.Page, err error) {
+func (s *Storage) decodePage(filePath string) (page *storage.Page, err error) {
 	defer func() { err = e.WrapIfErr("can't decode page", err) }()
 
 	f, err := os.Open(filePath)

@@ -1,7 +1,9 @@
 package telegram
 
 import (
+	"context"
 	"errors"
+
 	"read-adviser/clients/telegram"
 	"read-adviser/events"
 	"read-adviser/lib/e"
@@ -20,9 +22,8 @@ type Meta struct {
 }
 
 var (
-	ErrUnknownEvent    = errors.New("unknown event type")
-	ErrUnknownMetaType = errors.New("unknown meta type")
-	errMsg             = "can't process message"
+	ErrUnknownEventType = errors.New("unknown event type")
+	ErrUnknownMetaType  = errors.New("unknown meta type")
 )
 
 func New(client *telegram.Client, storage storage.Storage) *Processor {
@@ -53,26 +54,23 @@ func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 	return res, nil
 }
 
-func (p *Processor) Process(event events.Event) error {
+func (p *Processor) Process(ctx context.Context, event events.Event) error {
 	switch event.Type {
 	case events.Message:
-		return p.processMessage(event)
+		return p.processMessage(ctx, event)
 	default:
-		return e.Wrap(errMsg, ErrUnknownEvent)
+		return e.Wrap("can't process message", ErrUnknownEventType)
 	}
 }
 
-func (p *Processor) processMessage(event events.Event) (err error) {
-	defer func() { err = e.WrapIfErr(errMsg, err) }()
-
+func (p *Processor) processMessage(ctx context.Context, event events.Event) error {
 	meta, err := meta(event)
-
 	if err != nil {
-		return err
+		return e.Wrap("can't process message", err)
 	}
 
-	if err := p.doCmd(event.Text, meta.ChatID, meta.Username); err != nil {
-		return err
+	if err := p.doCmd(ctx, event.Text, meta.ChatID, meta.Username); err != nil {
+		return e.Wrap("can't process message", err)
 	}
 
 	return nil
@@ -105,18 +103,18 @@ func event(upd telegram.Update) events.Event {
 	return res
 }
 
-func fetchType(upd telegram.Update) events.Type {
-	if upd.Message == nil {
-		return events.Unknown
-	}
-
-	return events.Message
-}
-
 func fetchText(upd telegram.Update) string {
 	if upd.Message == nil {
 		return ""
 	}
 
 	return upd.Message.Text
+}
+
+func fetchType(upd telegram.Update) events.Type {
+	if upd.Message == nil {
+		return events.Unknown
+	}
+
+	return events.Message
 }
