@@ -3,15 +3,14 @@ package telegram
 import (
 	"context"
 	"errors"
-
-	"read-adviser/clients/telegram"
-	"read-adviser/events"
-	"read-adviser/lib/e"
-	"read-adviser/storage"
+	telegram2 "read-adviser/internal/clients/telegram"
+	"read-adviser/internal/events"
+	"read-adviser/internal/lib/e"
+	"read-adviser/internal/storage"
 )
 
 type Processor struct {
-	tg      *telegram.Client
+	tg      *telegram2.Client
 	offset  int
 	storage storage.Storage
 }
@@ -26,7 +25,7 @@ var (
 	ErrUnknownMetaType  = errors.New("unknown meta type")
 )
 
-func New(client *telegram.Client, storage storage.Storage) *Processor {
+func New(client *telegram2.Client, storage storage.Storage) *Processor {
 	return &Processor{
 		tg:      client,
 		storage: storage,
@@ -85,7 +84,7 @@ func meta(event events.Event) (Meta, error) {
 	return res, nil
 }
 
-func event(upd telegram.Update) events.Event {
+func event(upd telegram2.Update) events.Event {
 	updType := fetchType(upd)
 
 	res := events.Event{
@@ -103,7 +102,7 @@ func event(upd telegram.Update) events.Event {
 	return res
 }
 
-func fetchText(upd telegram.Update) string {
+func fetchText(upd telegram2.Update) string {
 	if upd.Message == nil {
 		return ""
 	}
@@ -111,7 +110,7 @@ func fetchText(upd telegram.Update) string {
 	return upd.Message.Text
 }
 
-func fetchType(upd telegram.Update) events.Type {
+func fetchType(upd telegram2.Update) events.Type {
 	if upd.Message == nil {
 		return events.Unknown
 	}

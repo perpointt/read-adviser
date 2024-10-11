@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"read-adviser/lib/e"
+	"read-adviser/internal/lib/e"
 )
 
 type Storage interface {

@@ -1,0 +1,15 @@
+[Unit]
+Description=Url Shortener
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/apps/read-adviser
+ExecStart=/root/apps/read-adviser/read-adviser
+Restart=always
+RestartSec=4
+StandardOutput=inherit
+EnvironmentFile=/root/apps/read-adviser/config.env
+
+[Install]
+WantedBy=multi-user.target

@@ -3,7 +3,7 @@ package event_consumer
 import (
 	"context"
 	"log"
-	"read-adviser/events"
+	"read-adviser/internal/events"
 	"time"
 )
 

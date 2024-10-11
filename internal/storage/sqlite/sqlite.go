@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"read-adviser/lib/e"
-	"read-adviser/storage"
+	"read-adviser/internal/lib/e"
+	"read-adviser/internal/storage"
 )
 
 type Storage struct {

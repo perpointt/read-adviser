@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-	"read-adviser/lib/e"
+	"read-adviser/internal/lib/e"
 	"strconv"
 )
 

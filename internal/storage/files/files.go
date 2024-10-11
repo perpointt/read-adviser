@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
-	"read-adviser/lib/e"
-	"read-adviser/storage"
+	"read-adviser/internal/lib/e"
+	"read-adviser/internal/storage"
 	"time"
 )
 
