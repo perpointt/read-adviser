@@ -249,3 +249,4 @@ Temporary Items
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,goland,go,jetbrains
 storage/**/*
+config/local.yaml
