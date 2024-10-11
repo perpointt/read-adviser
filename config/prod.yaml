@@ -1,4 +1,4 @@
 env: "prod"
-storage_path: "./storage/sqlite/storage.db"
+storage_path: "./storage.db"
 tg_bot_api_host: "api.telegram.org"
 batch_size: 100
