@@ -1,5 +1,4 @@
 env: "local" # local, dev, prod
 storage_path: "./storage/sqlite/storage.db"
 tg_bot_api_host: "api.telegram.org"
-tg_bot_api_token: "7109338359:AAFNJPSebHWzPXJ32U02Eey7hautahEKbtk"
 batch_size: 100
