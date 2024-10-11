@@ -91,12 +91,12 @@ func event(upd telegram.Update) events.Event {
 	updType := fetchType(upd)
 
 	res := events.Event{
-		Type: fetchType(upd),
+		Type: updType,
 		Text: fetchText(upd),
 	}
 
 	if updType == events.Message {
-		res.Meta = &Meta{
+		res.Meta = Meta{
 			ChatID:   upd.Message.Chat.ID,
 			Username: upd.Message.From.Username,
 		}
