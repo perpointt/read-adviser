@@ -53,21 +53,19 @@ func (s Storage) Save(page *storage.Page) (err error) {
 }
 
 func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
-	defer func() { err = e.WrapIfErr("can't pick random page", err) }()
-
 	path := filepath.Join(s.basePath, userName)
 
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, err
+		return nil, e.WrapIfErr("can't pick random page", err)
 	}
 
 	if len(files) == 0 {
 		return nil, storage.ErrNoSavedPages
 	}
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	n := r.Intn(len(files))
+	rand.Seed(time.Now().UnixNano())
+	n := rand.Intn(len(files))
 
 	file := files[n]
 
@@ -107,6 +105,17 @@ func (s Storage) IsExists(p *storage.Page) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func isFolderExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
 
 func (s Storage) decodePage(filePath string) (page *storage.Page, err error) {

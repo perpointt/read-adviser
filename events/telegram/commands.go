@@ -65,14 +65,15 @@ func (p *Processor) savePage(chatID int, pageUrl string, username string) (err e
 }
 
 func (p *Processor) sendRandom(chatID int, username string) (err error) {
-	defer func() { err = e.WrapIfErr("can't do command: send random page", err) }()
+	defer func() { err = e.WrapIfErr("can't do command: can't send random", err) }()
 
 	page, err := p.storage.PickRandom(username)
+	if err != nil && !errors.Is(err, storage.ErrNoSavedPages) {
+		return err
+	}
 
 	if errors.Is(err, storage.ErrNoSavedPages) {
 		return p.tg.SendMessage(chatID, msgNoSavedPages)
-	} else if err != nil {
-		return err
 	}
 
 	if err := p.tg.SendMessage(chatID, page.URL); err != nil {
